@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/40078dd3-fb0e-4baf-bf24-0cc27ff5b94c/resourceGroups/documantation/providers/Microsoft.Web/sites/chatbot-ingest-ui",
+    "appService.deploySubpath": "."
+}
