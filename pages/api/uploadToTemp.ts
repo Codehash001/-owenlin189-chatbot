@@ -15,6 +15,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     // Specify the destination folder where you want to copy the files
     const destinationFolder = path.resolve(process.cwd(), 'public/temp');
 
+    // Create the destination folder if it doesn't exist
+    if (!fs.existsSync(destinationFolder)) {
+      fs.mkdirSync(destinationFolder, { recursive: true });
+    }
+
     // Iterate over each file in the selectedTempFiles array
     selectedTempoFiles.forEach((file: { path: string; name: string }) => {
       // Check if the file object has a valid path
