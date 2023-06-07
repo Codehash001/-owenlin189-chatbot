@@ -5,6 +5,7 @@ import {
     AccordionHeader,
     AccordionBody,
   } from "@material-tailwind/react";
+import Link from "next/link";
 
   export default function Sidebar(){
 
@@ -53,9 +54,9 @@ import {
         ))}
             </div>
             <div className="flex flex-row justify-center mt-5">
-                <a href="/ingest">
+                <Link href="/ingest">
                 <div className="rounded-md mx-4 bg-blue-400 text-white px-4 py-2 mb-2 hover:bg-blue-500">Create a new dataset</div>
-                </a>
+                </Link>
             </div>
         </div>
     )
