@@ -15,11 +15,15 @@ import {
 } from '@/components/ui/accordion';
 import Sidebar from '@/components/sidebar';
 import datasetData from '../data.json'
+import Link from 'next/link';
 
 export default function Home() {
   const [query, setQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [sourceDocs, setSourceDocs] = useState<Document[]>([]);
+  const [allfiles, setallFiles] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [selectedTempFiles, SetSelectedTempFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [messageState, setMessageState] = useState<{
     messages: Message[];
@@ -93,7 +97,7 @@ export default function Home() {
         body: JSON.stringify({
           question,
           history,
-          selectedDataset,
+          selectedTempFiles,
         }),
         signal: ctrl.signal,
         onmessage: (event) => {
@@ -171,27 +175,86 @@ export default function Home() {
     }
   }, [chatMessages]);
 
+
+  const getFiles = async () => {
+    try {
+      const response = await fetch("/api/upload");
+      const data = await response.json();
+      setallFiles(data.files);
+    } catch (error: any) {
+      console.log(error.response?.data);
+    }
+  };
+
+  const deleteFile = async (fileName: any) => {
+    try {
+      const response = await fetch(`/api/upload?fileName=${fileName}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      if (response.ok) {
+        getFiles()
+      } else {
+        setErrorMessage(data.error);
+      }
+    } catch (error: any) {
+      console.log(error.response?.data);
+    }
+  }
+
+  useEffect(() => {
+    getFiles()
+  }, []);
+
+  const handleCheckboxChange = (file: File) => {
+    if (selectedTempFiles.includes(file)) {
+      SetSelectedTempFiles(selectedTempFiles.filter((item) => item !== file));
+    } else {
+      SetSelectedTempFiles([...selectedTempFiles, file]);
+    }
+  };
+
   return (
     <> 
     <div className='flex flex-row'>
-    <Sidebar/>
+    <div className=" h-screen w-[400px] bg-slate-200 px-4 py-10 flex flex-col justify-between space-y-5">
+                
+
+            <div>
+            <div className="rounded-md mx-4 bg-black text-white px-4 py-2 mb-2 text-center">Current dataset details</div>
+            <h1 className=" text-center text-black font-bold my-3">Filter from Uploaded Documents</h1>
+            <ul className="text-black px-4 overflow-auto h-full custom-scrollbar">
+        {allfiles.map((file) => (
+          <li className="space-x-6 flex items-center my-2 justify-between border-b-2 border-gray-300 py-2" key={file}>
+            <div className="font-semibold md:text-[16px]">
+            <input
+            type="checkbox"
+            checked={selectedTempFiles.includes(file)}
+            onChange={() => handleCheckboxChange(file)}
+            className="mr-2"
+          />
+          {file}{" "}
+            </div>
+            <button className="" onClick={() => deleteFile(file)}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" className="fill-red-600"><path d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H6zm10.618-3L15 2H9L7.382 4H3v2h18V4z"></path></svg>
+            </button>
+          </li>
+        ))}
+      </ul>
+            </div>
+
+            <div className="flex flex-row justify-center mt-5">
+                <Link href="/ingest">
+                <div className="rounded-md mx-4 bg-blue-400 text-white px-4 py-2 mb-2 hover:bg-blue-500">Ingest more documents</div>
+                </Link>
+            </div>
+        </div>
       <Layout>
         <div className="mx-auto flex flex-col gap-4">
-          <div className='w-full flex flex-row justify-between p-4'>
+          <div className='w-full flex flex-row justify-center p-4'>
           <h1 className="text-2xl font-bold leading-[1.1] tracking-wide text-center">
             QA Chatbot for Custom Docs
           </h1>
-          <div>
-      <select id="dataset" value={selectedDataset} onChange={handleDatasetChange}>
-      <option value="">-- Select a dataset --</option>
-      {datasetData && datasetData.map((data) => (
-        <option key={data.id} value={data.namespace}>
-          {data.namespace}
-        </option>
-      ))}
-    </select>
-
-    </div>
           </div>
           <main className={styles.main}>
             <div className={styles.cloud}>

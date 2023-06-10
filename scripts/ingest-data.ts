@@ -3,15 +3,14 @@ import { OpenAIEmbeddings } from 'langchain/embeddings';
 import { PineconeStore } from 'langchain/vectorstores';
 import { pinecone } from '@/utils/pinecone-client';
 import { CustomPDFLoader , CustomCSVLoader, CustomTextLoader, CustomMarkdownLoader } from '@/utils/customPDFLoader';
-import { PINECONE_INDEX_NAME} from '@/config/pinecone';
+import { PINECONE_INDEX_NAME , PINECONE_NAME_SPACE} from '@/config/pinecone';
 import { DirectoryLoader } from 'langchain/document_loaders';
 import fs from 'fs/promises';
 
 /* Name of directory to retrieve your files from */
 const filePath = 'public/temp';
 
-export const run = async (pineconeSpaceX: string) => {
-  const pineconeSpace = pineconeSpaceX
+export const run = async () => {
   try {
     /*load raw docs from the all files in the directory */
     const directoryLoader = new DirectoryLoader(filePath, {
@@ -41,19 +40,16 @@ export const run = async (pineconeSpaceX: string) => {
     //embed the PDF documents
     await PineconeStore.fromDocuments(docs, embeddings, {
       pineconeIndex: index,
-      namespace: pineconeSpace,
+      namespace: PINECONE_NAME_SPACE,
       textKey: 'text',
     });
-    console.log('All files deleted');
   } catch (error) {
     console.log('error', error);
     throw new Error('Failed to ingest your data');
   }
 };
 
-const pineconeSpaceX = process.argv[2]; // Retrieve the argument from command line
-
 (async () => {
-  await run(pineconeSpaceX);
+  await run();
   console.log('ingestion complete');
 })();

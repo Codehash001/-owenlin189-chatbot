@@ -1,8 +1,9 @@
 import { Document } from 'langchain/document';
 import { readFile } from 'fs/promises';
 import { BaseDocumentLoader } from 'langchain/document_loaders';
-import  csv from 'csv-parser';
+import csv from 'csv-parser';
 import { marked } from 'marked';
+import path from 'path';
 
 export abstract class BufferLoader extends BaseDocumentLoader {
   constructor(public filePathOrBlob: string | Blob) {
@@ -42,6 +43,7 @@ export class CustomPDFLoader extends BufferLoader {
         pageContent: parsed.text.toString(), // Convert to string
         metadata: {
           ...metadata,
+          pdf_name: getPdfName(metadata.source),
           pdf_numpages: parsed.numpages,
         },
       }),
@@ -117,4 +119,9 @@ async function PDFLoaderImports() {
     );
   }
 }
+
+function getPdfName(source: string): string {
+  return path.basename(source);
+}
+
 

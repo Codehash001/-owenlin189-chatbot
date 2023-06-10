@@ -222,8 +222,8 @@ const copyFiles = async (selectedTempoFiles: any) => {
 
 
   async function runCommand() {
-    const command = `npm run ingest ${namespace}`; // Modify the command to include the NameSpace argument
     copyFilesToTempFolderonClick()
+    const command = `npm run ingest`; // Modify the command to include the NameSpace argument
     setIngesting(true)
     setApiResponse('Ingesting your data. Please wait...')
     const response = await fetch('/api/runCommand', {
@@ -376,21 +376,13 @@ const copyFiles = async (selectedTempoFiles: any) => {
         ))}
       </ul>
       
-      <div className="flex space-x-2">
-      <input
-        type="text"
-        value={namespace}
-        onChange={handleNamespaceChange}
-        placeholder="Dataset name"
-        className="bg-white px-4"
-      />
-
+      <div className="flex space-x-2 justify-center">
         <button
           onClick={runCommand}
-          disabled={ingesting || uploading || !namespace}
+          disabled={ingesting || uploading}
           className="bg-violet-600 p-3 w-auto text-center rounded text-white flex justify-center items-center disabled:opacity-25"
         >
-          {ingesting ? "Creating dataset.." : "Create dataset for selected"}
+          {ingesting ? "Creating dataset.." : "Ingest selected docs"}
         </button>
         </div>
       {/* <button onClick={getFiles}>Refresh</button> */}

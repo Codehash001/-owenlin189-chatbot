@@ -9,7 +9,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { question, history , selectedDataset } = req.body;
+  const { question, history , selectedTempFiles } = req.body;
 
   if (!question) {
     return res.status(400).json({ message: 'No question in the request' });
@@ -25,7 +25,8 @@ export default async function handler(
     {
       pineconeIndex: index,
       textKey: 'text',
-      namespace: selectedDataset,
+      namespace: PINECONE_NAME_SPACE,
+      filter: { pdf_name: { $in: selectedTempFiles } },
     },
   );
 
