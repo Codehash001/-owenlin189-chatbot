@@ -25,6 +25,7 @@ export default function Home() {
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedTempFiles, SetSelectedTempFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const  [openedTab , setOpenedTab] = useState(0)
   const [messageState, setMessageState] = useState<{
     messages: Message[];
     pending?: string;
@@ -214,19 +215,31 @@ export default function Home() {
     }
   };
 
+  const toggleTab = (n:number) => {
+    setOpenedTab(n)
+  };
+
   return (
     <> 
     <div className='flex flex-row'>
-    <div className=" h-screen w-[400px] bg-slate-200 px-4 py-10 flex flex-col justify-between space-y-5">
+    <div className=" h-screen w-[400px] bg-slate-200 pb-10 flex flex-col justify-between space-y-5">
                 
 
             <div>
-            <div className="rounded-md mx-4 bg-black text-white px-4 py-2 mb-2 text-center">Current dataset details</div>
-            <h1 className=" text-center text-black font-bold my-3">Filter from Uploaded Documents</h1>
-            <ul className="text-black px-4 overflow-auto h-full custom-scrollbar">
+              <div className='flex justify-center px-2 pt-4'>   
+                <div onClick={() => toggleTab(0)} className={openedTab == 0 ?" bg-white text-black w-full py-2 mb-2 text-center text-sm font-bold border-b-2 border-black" : " bg-black text-white  w-full py-2 mb-2 text-center text-sm border border-black cursor-pointer"}>Dataset Details</div>
+                <div onClick={() => toggleTab(1)} className={openedTab == 1 ?" bg-white text-black w-full py-2 mb-2 text-center text-sm font-bold border-b-2 border-black" : " bg-black text-white  w-full py-2 mb-2 text-center text-sm border border-black cursor-pointer"}>Ingest Docs</div>
+              </div>
+            
+          {
+            openedTab == 0 ?
+            (
+              <>
+            <h1 className=" text-center text-black font-semibold my-3">Filter from Uploaded Documents</h1>
+            <ul className="text-black px-6 overflow-y-auto h-[500px] custom-scrollbar">
         {allfiles.map((file) => (
-          <li className="space-x-6 flex items-center my-2 justify-between border-b-2 border-gray-300 py-2" key={file}>
-            <div className="font-semibold md:text-[16px]">
+          <li className="space-x-6 flex items-center my-1 justify-between border-b-2 border-gray-300 py-1" key={file}>
+            <div className="font-semibold md:text-[13px]">
             <input
             type="checkbox"
             checked={selectedTempFiles.includes(file)}
@@ -236,11 +249,16 @@ export default function Home() {
           {file}{" "}
             </div>
             <button className="" onClick={() => deleteFile(file)}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" className="fill-red-600"><path d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H6zm10.618-3L15 2H9L7.382 4H3v2h18V4z"></path></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" className="fill-red-600"><path d="M6 7H5v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7H6zm10.618-3L15 2H9L7.382 4H3v2h18V4z"></path></svg>
             </button>
           </li>
         ))}
       </ul>
+      </>
+            ) : (
+              <></>
+            )
+          }
             </div>
 
             <div className="flex flex-row justify-center mt-5">
