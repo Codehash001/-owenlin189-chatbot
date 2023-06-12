@@ -215,10 +215,6 @@ export default function Home() {
     }
   };
 
-  const toggleTab = (n:number) => {
-    setOpenedTab(n)
-  };
-
   return (
     <> 
     <div className='flex flex-row'>
@@ -227,8 +223,7 @@ export default function Home() {
 
             <div>
               <div className='flex justify-center px-2 pt-4'>   
-                <div onClick={() => toggleTab(0)} className={openedTab == 0 ?" bg-white text-black w-full py-2 mb-2 text-center text-sm font-bold border-b-2 border-black" : " bg-black text-white  w-full py-2 mb-2 text-center text-sm border border-black cursor-pointer"}>Dataset Details</div>
-                <div onClick={() => toggleTab(1)} className={openedTab == 1 ?" bg-white text-black w-full py-2 mb-2 text-center text-sm font-bold border-b-2 border-black" : " bg-black text-white  w-full py-2 mb-2 text-center text-sm border border-black cursor-pointer"}>Ingest Docs</div>
+                <div className={" bg-white text-black w-full py-2 mb-2 text-center text-sm font-bold border-b-2 border-black"}>Dataset Details</div>              
               </div>
             
           {

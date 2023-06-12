@@ -429,6 +429,11 @@ const copyFiles = async (selectedTempoFiles: any) => {
     </div>
     
     </div>
+    <Link href={"/"}>
+    <div className="absolute bottom-7 right-7 bg-black text-white text-center py-2 px-4 rounded-full filter drop-shadow-2xl">
+        Back to chatbot
+    </div>
+    </Link>
     </div>
   );
 };

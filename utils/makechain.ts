@@ -44,6 +44,7 @@ export const makeChain = (vectorstore: PineconeStore ,
       qaTemplate: QA_PROMPT,
       questionGeneratorTemplate: CONDENSE_PROMPT,
       returnSourceDocuments: true, //The number of source documents returned is 4 by default
+      
     },
   );
   return chain;
