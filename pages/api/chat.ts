@@ -9,7 +9,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const { question, history , selectedTempFiles } = req.body;
+  const { question, history , selectedTempFiles , numberOfSourceDocs } = req.body;
 
   if (!question) {
     return res.status(400).json({ message: 'No question in the request' });
@@ -43,7 +43,7 @@ export default async function handler(
   sendData(JSON.stringify({ data: '' }));
 
   //create chain
-  const chain = makeChain(vectorStore, (token: string) => {
+  const chain = makeChain(vectorStore, numberOfSourceDocs, (token: string) => {
     sendData(JSON.stringify({ data: token }));
   });
 

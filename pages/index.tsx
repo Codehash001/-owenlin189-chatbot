@@ -24,6 +24,7 @@ export default function Home() {
   const [allfiles, setallFiles] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedTempFiles, SetSelectedTempFiles] = useState<File[]>([]);
+  const [numberOfSourceDocs, setNumberOfSourceDocs] = useState(1)
   const [error, setError] = useState<string | null>(null);
   const  [openedTab , setOpenedTab] = useState(0)
   const [messageState, setMessageState] = useState<{
@@ -99,6 +100,7 @@ export default function Home() {
           question,
           history,
           selectedTempFiles,
+          numberOfSourceDocs,
         }),
         signal: ctrl.signal,
         onmessage: (event) => {
@@ -215,6 +217,11 @@ export default function Home() {
     }
   };
 
+  const handleNumberOfDocs = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const inputNumber = Number(event.target.value);
+    setNumberOfSourceDocs(inputNumber);
+  };
+
   return (
     <> 
     <div className='flex flex-row'>
@@ -264,10 +271,19 @@ export default function Home() {
         </div>
       <Layout>
         <div className="mx-auto flex flex-col gap-4">
-          <div className='w-full flex flex-row justify-center p-4'>
+          <div className='w-full flex flex-row justify-between items-center p-4'>
           <h1 className="text-2xl font-bold leading-[1.1] tracking-wide text-center">
             QA Chatbot for Custom Docs
           </h1>
+          <div className='flex space-x-2'>
+            <h1 className='text-black text-sm font-semibold'>Source Documents : </h1>
+          <input
+        type="number"
+        value={numberOfSourceDocs}
+        onChange={handleNumberOfDocs}
+        className='bg-gray-200 text-black rounded-md text-center w-[80px]'
+      />
+          </div>
           </div>
           <main className={styles.main}>
             <div className={styles.cloud}>
