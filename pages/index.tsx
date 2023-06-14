@@ -26,6 +26,9 @@ export default function Home() {
   const [selectedTempFiles, SetSelectedTempFiles] = useState<File[]>([]);
   const [numberOfSourceDocs, setNumberOfSourceDocs] = useState(1)
   const [error, setError] = useState<string | null>(null);
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [ isLoggedIn , setIsLoggedIn] = useState(false)
   const  [openedTab , setOpenedTab] = useState(0)
   const [messageState, setMessageState] = useState<{
     messages: Message[];
@@ -42,6 +45,21 @@ export default function Home() {
     history: [],
     pendingSourceDocs: [],
   });
+
+  const validUsername = process.env.NEXT_PUBLIC_USERNAME
+  const validPassword = process.env.NEXT_PUBLIC_PASSWORD
+
+  const handleSubmitLogin = (event : any) => {
+    event.preventDefault()
+    if (username == validUsername && password == validPassword ) {
+      // If the email and password match, redirect to the home page
+      setIsLoggedIn(true)
+
+    } else {
+      // Otherwise, show an error message
+      setErrorMessage('Incorrect email or password')
+    }
+  }
 
   const { messages, pending, history, pendingSourceDocs } = messageState;
 
@@ -221,6 +239,46 @@ export default function Home() {
     const inputNumber = Number(event.target.value);
     setNumberOfSourceDocs(inputNumber);
   };
+
+  if (!isLoggedIn) {
+    return(
+      <div>
+<div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
+	<div className="relative py-3 sm:max-w-xl sm:mx-auto">
+		<div
+			className="absolute inset-0 bg-gradient-to-r from-gray-600 to-gray-800 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl">
+		</div>
+		<div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+			<div className="max-w-md mx-auto">
+				<div>
+					<h1 className="text-2xl font-bold text-center"><span className='text-xl font-semibold'>Login to</span><br/>Upload and Ingest</h1>
+				</div>
+				<div className="divide-y divide-gray-200">
+					<div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+						<div className="relative">
+							<input  type="text" value={username} onChange={(e) => setUsername(e.target.value)}  className="rounded-md peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Username" />
+							<label className="">Username</label>
+						</div>
+						<div className="relative">
+							<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="rounded-md peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:borer-rose-600" placeholder="Password" />
+							<label className="">Password</label>
+						</div>
+						<div className="relative">
+							<button className="bg-gray-900 text-white rounded-md px-6 py-2" onClick={handleSubmitLogin}>Log In</button>
+						</div>
+            <div className='text-sm text-red-700'>
+              {errorMessage && <p>{errorMessage}</p>}
+            </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+    </div>
+
+    )
+  }
 
   return (
     <> 
